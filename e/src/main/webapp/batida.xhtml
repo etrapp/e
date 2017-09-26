@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:head>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	<title>registro</title>
+
+	<style type="text/css">
+		.ui-panelgrid > * > tr, .ui-panelgrid > * > tr > td.ui-panelgrid-cell {
+	    	border: none;
+		}
+	</style>
+</h:head>
+<h:body>
+
+	<div id="divPanel" class="container" >
+		<center>
+			<p:panel id="panel-signup" header="entradas" resizable="false">
+				<h:form  id="lancamento" >
+<!-- 					<p:messages id="mensagens" autoUpdate="true" closable="true" /> -->
+				    <p:growl id="mensagens" sticky="false" life="2000" />  
+				
+					<p:panelGrid columns="6" cellpadding="2">
+					
+						<p:outputLabel for="data" value="#{msg['msg.cadastro.data']}" />
+						<p:calendar id="data" value="#{registroPontoBean.data}" pattern="dd/MM/yyyy HH:mm" mask="true" locale="pt_BR" showButtonPanel="false" style="width: 93px;" effect="slide" alt="#{msg['msg.cadastro.data']}" />
+
+					</p:panelGrid>
+					<br></br>
+					<p:commandButton id="botao_salvar" value="#{msg['btn.salvar']}" action="#{registroPontoBean.salvar()}" ajax="true" update="mensagens,botao_salvar,resultado,@form" onclick="jQuery(this).addClass('ui-state-disabled')"/>
+					&nbsp;
+					<p:commandButton id="botao_limpar" value="#{msg['btn.limpar']}" action="#{registroPontoBean.limparFormulario()}" ajax="true" update="mensagens,botao_limpar,resultado,@form" onclick="jQuery(this).addClass('ui-state-disabled')"/>
+				</h:form>
+
+			</p:panel>
+		</center>
+	</div>
+	
+	
+	<div id="lista" class="conteudo">
+		
+			<p:outputPanel id="resultado">
+
+				<div>
+					<div>
+						<p:dataTable id="dtPendentes" value="#{registroPontoBean.listar()}" var="lista" 
+							styleClass="table table-striped" resizeMode="expand" emptyMessage="#{msg['msg.semRegistros']}">				
+<!--         					scrollable="true" scrollWidth="100%" scrollHeight="350" -->
+<!--         					paginator="true" rows="10"  -->
+<!--                  			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} " -->
+<!--                  			currentPageReportTemplate="Exibindo {startRecord}-{endRecord} de {totalRecords}" -->
+<!--                  			lazy="true" paginatorAlwaysVisible="false"> -->
+
+							<p:column headerText="#{msg['msg.cadastro.data']}" >
+								<h:outputText value="#{lista.data}" >
+								<f:convertDateTime pattern="dd/MM/yyyy (EEEE)"/>
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Registros" >
+								<h:outputText value="#{lista.hora}">
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Resumo" >
+								<h:outputText value="#{lista.resultado}">
+								</h:outputText>
+							</p:column>
+							
+							<p:column headerText="#{msg['msg.acao']}" exportable="false"  >
+							<center>
+								<p:commandLink id="btnExcluir" action="#{registroPontoBean.deletar()}" ajax="true" update="resultado">
+								<h:graphicImage value="images/trash.png" title="#{msg['btn.excluir']}" width="16" height="16"></h:graphicImage>
+									<f:setPropertyActionListener target="#{registroPontoBean.itemSelecionado}" value="#{lista.dataf}" />
+								</p:commandLink>								
+								<p:tooltip for="btnExcluir" value="#{msg['btn.excluir']}"/>
+							</center>
+							</p:column>
+							
+						</p:dataTable>
+						
+					</div>
+				</div>
+				
+			</p:outputPanel>
+			
+	</div>
+
+</h:body>
+
+</html>

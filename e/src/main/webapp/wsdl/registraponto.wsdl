@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="RegistraPontoService" targetNamespace="http://trapp.com.br/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://trapp.com.br/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://trapp.com.br/" schemaLocation="registraponto_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="registra">
+    <wsdl:part name="parameters" element="tns:registra">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="registraResponse">
+    <wsdl:part name="parameters" element="tns:registraResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="Ponto">
+    <wsdl:operation name="registra">
+      <wsdl:input name="registra" message="tns:registra">
+    </wsdl:input>
+      <wsdl:output name="registraResponse" message="tns:registraResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RegistraPontoServiceSoapBinding" type="tns:Ponto">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="registra">
+      <soap:operation soapAction="urn:Registra" style="document"/>
+      <wsdl:input name="registra">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="registraResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RegistraPontoService">
+    <wsdl:port name="RegistraPontoPort" binding="tns:RegistraPontoServiceSoapBinding">
+      <soap:address location="http://localhost:6080/e/services/RegistraPontoPort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:soap="http://cxf.apache.org/bindings/soap"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://cxf.apache.org/bindings/soap http://cxf.apache.org/schemas/configuration/soap.xsd http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+	<jaxws:endpoint xmlns:tns="http://trapp.com.br/" id="registraponto"
+		implementor="br.com.trapp.RegistraPonto" wsdlLocation="wsdl/registraponto.wsdl"
+		endpointName="tns:RegistraPontoPort" serviceName="tns:RegistraPontoService"
+		address="/RegistraPontoPort">
+		<jaxws:features>
+			<bean class="org.apache.cxf.feature.LoggingFeature" />
+		</jaxws:features>
+	</jaxws:endpoint>
+	<jaxws:endpoint xmlns:tns="http://trapp.com.br/" id="consultaconta"
+		implementor="br.com.trapp.ConsultaConta" wsdlLocation="wsdl/consultaconta.wsdl"
+		endpointName="tns:ConsultaContaPort" serviceName="tns:ConsultaContaService"
+		address="/ConsultaContaPort">
+		<jaxws:features>
+			<bean class="org.apache.cxf.feature.LoggingFeature" />
+		</jaxws:features>
+	</jaxws:endpoint>
+</beans>

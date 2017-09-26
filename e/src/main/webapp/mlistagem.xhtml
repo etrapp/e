@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+	  xmlns:pm="http://primefaces.org/mobile"	>
+<f:view renderKitId="PRIMEFACES_MOBILE" />
+
+<h:head>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	<title>#{msg['msg.listagem.titulo']}</title>
+	<link rel="icon" type="image/ico" href="images/favicon.png" />
+
+	<style type="text/css">
+		
+		.ui-panelgrid > * > tr, .ui-panelgrid > * > tr > td.ui-panelgrid-cell {
+	    	border: none;
+		}
+		
+	</style>
+</h:head>
+<h:body>
+<pm:page id="listagem">
+
+	<pm:header>
+	<h1>
+		<p:outputLabel value="#{msg['msg.listagem.titulo']}"></p:outputLabel>
+	</h1>
+	</pm:header>
+
+	<pm:content>
+<!-- 		<p:messages id="mensagem" autoUpdate="true" closable="true" showSummary="true" /> -->
+		<p:growl id="mensagem"/>
+		
+		<p:dataTable id="dtPendentes" value="#{caixaBean.listarD()}" var="obj" 
+			styleClass="table table-striped" resizeMode="expand" emptyMessage="#{msg['msg.semRegistros']}"				
+    					scrollable="true" 
+    					paginator="true" rows="8" 
+             			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+             			currentPageReportTemplate="Exibindo {startRecord}-{endRecord} de {totalRecords}"
+             			lazy="true" paginatorAlwaysVisible="false" sortBy="#{obj.mes}">
+
+			<p:column headerText="#{msg['msg.cadastro.data']}" width="20%">
+				<h:outputText id="outDt" value="#{obj.data}">
+					<f:convertDateTime pattern="dd/MM/yy"/>
+				</h:outputText>
+			</p:column>
+			
+			<p:column headerText="#{msg['msg.cadastro.conta']}" width="40%">
+				<h:outputText id="outCont" value="#{obj.conta}"/>	
+			</p:column>
+			
+			<p:column headerText="#{msg['msg.cadastro.valor']}"  width="40%">
+				<h:outputText id="outValor" value="#{obj.valor}" style="float:right;">
+	                    <f:convertNumber type="currency" currencySymbol="#{msg['msg.moeda.simbolo']}" />
+				</h:outputText>	
+			</p:column>
+			
+		</p:dataTable>
+		
+		
+		<h:form enctype="multipart/form-data" method="post">
+			<p:commandButton id="botao_voltar" value="#{msg['btn.voltar']}" action="#{caixaBean.mobcadastro()}" ajax="false" onclick="jQuery(this).addClass('ui-state-disabled')"/>
+			<p:commandButton id="botao_sair"   value="#{msg['btn.sair']}"   action="#{loginBean.logout}" immediate="true" onclick="window.location.href='login.xhtml'" ajax="true"/>
+		</h:form>
+	</pm:content>
+
+</pm:page>
+</h:body>
+
+</html>

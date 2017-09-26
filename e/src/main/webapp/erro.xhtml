@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+<title>Erro</title>
+	
+	<style type="text/css">
+	
+		.redColoredPanel .ui-panel-titlebar {
+		   background: #cc0000;
+		   color: #FFFFFF;
+		}
+				
+	</style>
+</h:head>
+
+<h:body>
+<!-- versao 1.0 -->
+
+	<div id="divPanel" class="container">
+		<div id="panel"	class="ui-panel ui-widget ui-widget-content ui-corner-all" >
+			<div id="panel_header" style="padding:6px 0 6px 5px;"
+				class="ui-panel-titlebar ui-widget-header ui-helper-clearfix ui-corner-all">
+				<span class="ui-panel-title">Acesso Negado</span>
+			</div>
+			<div id="panel_content" class="ui-panel-content ui-widget-content"  style="padding:0 0 20px 15px;">
+				<p>Desculpe, mas você não tem permissão para acessar este conteúdo.<br />Isso pode ter ocorrido pelos seguintes motivos:</p>
+				<ul><li>O endereço digitado é de uma área restrita</li><li>Você pode estar acessando o sistema a partir de uma rede insegura </li><li>Sua sessão expirou</li></ul>
+				<p>Verifique se:</p><ul><li>Você digitou o endereço corretamente</li><li>Está utilizando uma rede segura</li></ul>
+				<br></br>
+				<center>
+				<h:commandButton id="bts" action="login.xhtml"  onclick="window.location.href='login.xhtml'" value="Login" ajax="false" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left" style="padding:6px 20px 6px 20px;"/>
+				</center>
+			</div>
+		</div>
+	</div>
+
+</h:body>
+</html>

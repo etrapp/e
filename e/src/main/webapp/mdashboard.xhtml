@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+	  xmlns:pm="http://primefaces.org/mobile"	>
+<f:view renderKitId="PRIMEFACES_MOBILE" />
+
+<h:head>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	<title>#{msg['msg.dashboard.titulo']}</title>
+	<link rel="icon" type="image/ico" href="images/favicon.png" />
+
+	<!-- Graficos -->
+	<script src="scripts/highcharts.js"></script>
+	<script src="scripts/rendercharts.js"></script>
+	<script src="scripts/theme.js"></script>	
+	
+	<style type="text/css">
+		
+		.ui-panelgrid > * > tr, .ui-panelgrid > * > tr > td.ui-panelgrid-cell {
+	    	border: none;
+		}
+		
+	</style>
+</h:head>
+<h:body>
+<pm:page id="listagem">
+
+	<pm:header>
+	<h1>
+		<p:outputLabel value="#{msg['msg.dashboard.titulo']}"></p:outputLabel>
+	</h1>
+	</pm:header>
+
+	<pm:content>
+		<p:growl id="mensagem"/>
+
+		<div class="formulario correcao-row pendencias">
+			<h:form>
+			<p:poll autoStart="true" listener="#{dashboardBean.filtroInicial()}" oncomplete="renderChart(args)" interval="1" stop="#{dashboardBean.filtroInicialCarregado}"/>
+
+			<p:outputPanel id="resultado">	
+				<div id="containerPizzaMovimentacaoPorCategoria" class="grafico"></div>
+				<div id="containerBarraTotalPorConta" class="grafico"></div>
+				<div id="containerLinhaPgtoContaMesAtualAnterior" class="grafico"></div>
+
+				<div id="containerColunaTotalPorConta" class="grafico"></div>
+				<div id="containerPizzaPercentualPorConta" class="grafico"></div>
+				<div id="containerMovimentacaoDiariaMesAtualAnterior" class="grafico"></div>
+
+				<div id="containerConcluidosPendentes" class="grafico"></div>
+				<div id="containerNotasProblemaArea" class="grafico"></div>
+				<div id="containerDistribuicaoAnomalias" class="grafico"></div>
+				<div id="containerPendenteDentroForaPrazo" class="grafico"></div>
+				<div id="containerConcluidoDentroForaPrazo" class="grafico"></div>
+				<div id="containerNriCriadaExcluida" class="grafico"></div>
+			</p:outputPanel>
+
+
+			<p:commandButton styleClass="btn btn-primary" value="#{msg['btn.filtrar']}" ajax="true" update="resultado" 
+				action="#{dashboardBean.filtrarMobile()}" oncomplete="renderChart(args)" >
+			 </p:commandButton>
+			 		
+			<p:commandButton id="botao_voltar" value="#{msg['btn.voltar']}" action="#{dashboardBean.mobcadastro()}" ajax="false" onclick="jQuery(this).addClass('ui-state-disabled')"/>
+			<p:commandButton id="botao_sair"   value="#{msg['btn.sair']}"   action="#{loginBean.logout}" immediate="true" onclick="window.location.href='login.xhtml'" ajax="true"/>
+
+		</h:form>
+
+		</div>
+		
+		
+	<div class="limpador"></div>
+		
+	</pm:content>
+
+</pm:page>
+</h:body>
+
+</html>

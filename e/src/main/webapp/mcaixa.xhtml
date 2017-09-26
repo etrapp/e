@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+	  xmlns:pm="http://primefaces.org/mobile"	>
+<f:view renderKitId="PRIMEFACES_MOBILE" />
+
+<h:head>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	<title>#{msg['msg.cadastro.titulo']}</title>
+	<link rel="icon" type="image/ico" href="images/favicon.ico" />
+
+</h:head>
+<h:body>
+<pm:page id="lancamento">
+
+	<pm:header>
+		<h1>
+		<p:outputLabel value="#{msg['msg.cadastro.formulario']}"></p:outputLabel>
+		</h1>
+	</pm:header>
+
+
+	<pm:content>
+		<h:form  id="lancamento" >
+<!-- 		<p:messages id="mensagem" autoUpdate="true" closable="true" /> -->
+			<p:growl id="mensagem"/>
+
+			<p:panelGrid columns="2" rendered="true">			
+				<p:outputLabel for="data" value="#{msg['msg.cadastro.data']}" />
+				<p:calendar id="data" value="#{caixaBean.data}" pattern="dd/MM/yyyy" mask="true" locale="pt_BR" autocomplete="off"/>
+
+				<p:outputLabel for="tipoConta" value="#{msg['msg.cadastro.conta']}" />
+			    <p:autoComplete alt="#{msg['msg.cadastro.conta']}"
+			       id="tipoConta" value="#{caixaBean.contaSelecionada}" 
+			       converter="contaAutoCompleteConverter"
+			       completeMethod="#{autoComplete.completeConta}"
+			       var="tpConta" itemLabel="#{tpConta.conta}" itemValue="#{tpConta}"
+			       forceSelection="true" dropdown="true"
+			       required="false" maxResults="3" autocomplete="off"  >
+			    </p:autoComplete>
+
+				<p:outputLabel for="valor" value="#{msg['msg.cadastro.valor']}" />
+				<pe:inputNumber id="valor" value="#{caixaBean.valor}" maxlength="13" decimalPlaces="2" decimalSeparator="," thousandSeparator="." alt="#{msg['msg.cadastro.valor']}" autocomplete="off" ></pe:inputNumber>
+
+				<p:outputLabel for="formaPgto" value="#{msg['msg.cadastro.formaPgto']}" />
+			    <p:autoComplete alt="#{msg['msg.cadastro.formaPgto']}"
+			       id="formaPgto" value="#{caixaBean.formaPgtoSelecionado}" 
+			       converter="formaPgtoAutoCompleteConverter"
+			       completeMethod="#{autoComplete.completeFormaPgto}"
+			       var="tpPgto" itemLabel="#{tpPgto.formaPgto}" itemValue="#{tpPgto}"
+			       forceSelection="true" dropdown="true"
+			       required="false" maxResults="3" autocomplete="off">
+			    </p:autoComplete>
+				
+				<p:outputLabel for="responsavel" value="#{msg['msg.cadastro.responsavel']}" />
+				<p:autoComplete id="responsavel" value="#{caixaBean.responsavel}" completeMethod="#{autoComplete.completeResponsavel}" maxlength="20" alt="#{msg['msg.cadastro.responsavel']}" autocomplete="off"></p:autoComplete>
+							
+				<p:outputLabel for="descricao" value="#{msg['msg.cadastro.descricao']}" />
+				<p:inputText id="descricao" value="#{caixaBean.descricao}" maxlength="100" alt="#{msg['msg.cadastro.descricao']}" autocomplete="off"></p:inputText>
+
+
+				<p:commandButton id="botao_salvar" value="#{msg['btn.salvar']}" action="#{caixaBean.salvar()}" ajax="true" update="mensagem,botao_salvar,@form" onclick="jQuery(this).addClass('ui-state-disabled')"/>
+				<p:commandButton id="botao_listar" value="#{msg['btn.listar']}" action="#{caixaBean.moblistagem()}" ajax="true" onclick="jQuery(this).addClass('ui-state-disabled')"/>
+
+				<p:commandButton id="botao_dashboard" value="#{msg['btn.dashboard']}" action="#{caixaBean.mobdashboard()}" ajax="true" immediate="true" onclick="jQuery(this).addClass('ui-state-disabled')"/>
+				<p:commandButton id="botao_sair"   value="#{msg['btn.sair']}"   action="#{loginBean.logout}" immediate="true" onclick="window.location.href='login.xhtml'" ajax="true"/>
+
+			</p:panelGrid>
+
+		</h:form>
+	</pm:content>
+		
+</pm:page>
+</h:body>
+</html>

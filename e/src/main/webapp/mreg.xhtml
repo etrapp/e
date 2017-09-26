@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+	  xmlns:pm="http://primefaces.org/mobile"	>
+<f:view renderKitId="PRIMEFACES_MOBILE" />
+
+<h:head>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	<title>registro</title>
+
+</h:head>
+<h:body>
+
+<pm:page id="registro">
+
+	<pm:header title="Ponto" swatch="b">
+		<p:button outcome="pm:resumo?transition=flip" value="Resumo" icon="ui-icon-bullets" styleClass="ui-btn-left ui-btn-inline"  />
+	</pm:header>
+
+
+	<pm:content>
+		<h:form  id="registro" >
+<!-- 		<p:messages id="mensagem" autoUpdate="true" closable="true" /> -->
+		    <p:growl id="mensagem" sticky="false" life="800" />  
+
+			<p:panelGrid columns="1" rendered="true">			
+
+
+				<p:calendar id="data" value="#{registroPontoBean.data}" pattern="dd/MM/yyyy HH:mm" lang="pt_BR" autocomplete="off" showOn="false"/>
+
+				<p:commandButton id="botao_salvar" value="#{msg['btn.salvar']}" icon="ui-icon-arrow-r" action="#{registroPontoBean.salvar()}" ajax="false" />
+
+			</p:panelGrid>
+
+		</h:form>
+		
+		<p:outputPanel id="resultado">
+		
+			<p:dataTable id="dtPendentes" value="#{registroPontoBean.listarMobile()}" var="lista" 
+				styleClass="table table-striped" resizeMode="expand" emptyMessage="#{msg['msg.semRegistros']}"				
+     					scrollable="true" scrollWidth="100%" scrollHeight="350"
+     					paginator="true" rows="10" 
+              			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+              			currentPageReportTemplate="Exibindo {startRecord}-{endRecord} de {totalRecords}"
+              			lazy="true" paginatorAlwaysVisible="false">
+
+				<p:column headerText="#{msg['msg.cadastro.data']}" width="70">
+					<h:outputText value="#{lista.data}">
+						<f:convertDateTime pattern="dd/MM/yy (EEE)"/>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Registros" width="200">
+					<h:outputText value="#{lista.hora}">
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Resumo" width="50" style="text-align:right">
+					<h:outputText value="#{lista.resultado}">
+					</h:outputText>
+					&nbsp;&nbsp;
+					<p:commandLink id="btnExcluir" action="#{registroPontoBean.deletar()}" ajax="true" update="@all" style="text-align:right" >
+					<h:graphicImage value="images/trash.png" width="16" height="16"></h:graphicImage>
+						<f:setPropertyActionListener target="#{registroPontoBean.itemSelecionado}" value="#{lista.dataf}" />
+					</p:commandLink>								
+				</p:column>
+
+			</p:dataTable>
+
+ 
+		</p:outputPanel>
+		
+	</pm:content>
+		
+</pm:page>
+
+<pm:page id="resumo">
+
+	<pm:header title="Ponto" swatch="b">
+		<p:button outcome="pm:registro?transition=flip" value="Voltar" icon="ui-icon-arrow-l" styleClass="ui-btn-left ui-btn-inline"  />
+	</pm:header>
+
+	<pm:content>
+		<p:outputLabel>todo</p:outputLabel>		
+	</pm:content>
+		
+</pm:page>
+
+</h:body>
+</html>

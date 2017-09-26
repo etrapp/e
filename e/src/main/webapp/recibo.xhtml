@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:head>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	<title>#{msg['msg.credito.titulo']}</title>
+	<link rel="icon" type="image/ico" href="images/favicon.ico" />
+
+	<style type="text/css">
+		.ui-panelgrid > * > tr, .ui-panelgrid > * > tr > td.ui-panelgrid-cell {
+	    	border: none;
+		}
+	</style>
+</h:head>
+<h:body>
+
+	<div id="divPanel" class="container" >
+		<center>
+			<p:panel id="panel-signup" header="#{msg['msg.credito.formulario']}" resizable="false">
+				<h:form  id="lancamento" >
+<!-- 					<p:messages id="mensagens" autoUpdate="true" closable="true" /> -->
+				    <p:growl id="mensagens" sticky="false" life="4000" />  
+					<p:panelGrid columns="4" cellpadding="2">
+					
+						<p:outputLabel for="data" value="#{msg['msg.cadastro.data']}" />
+						<p:calendar id="data" value="#{caixaBean.data}" pattern="dd/MM/yyyy" mask="true" locale="pt_BR" showButtonPanel="false" style="width: 93px;" effect="slide" title="#{msg['msg.cadastro.data']}" />
+
+						<p:outputLabel for="valor" value="#{msg['msg.cadastro.valor']}" />
+						<pe:inputNumber id="valor" value="#{caixaBean.valor}" maxlength="13" decimalPlaces="2" decimalSeparator="," thousandSeparator="." title="#{msg['msg.cadastro.valor']}" ></pe:inputNumber>
+
+						<p:outputLabel for="responsavel" value="#{msg['msg.cadastro.responsavel']}" />
+						<p:autoComplete id="responsavel" value="#{caixaBean.responsavel}" completeMethod="#{autoComplete.completeResponsavel}" maxlength="20" title="#{msg['msg.cadastro.responsavel']}" >
+						</p:autoComplete>
+									
+						<p:outputLabel for="descricao" value="#{msg['msg.cadastro.descricao']}" />
+						<p:inputText id="descricao" value="#{caixaBean.descricao}" maxlength="100" title="#{msg['msg.cadastro.descricao']}" autocomplete="false" ></p:inputText>
+
+
+					</p:panelGrid>
+					<br></br>
+					<p:commandButton id="botao_salvar" value="#{msg['btn.salvar']}" action="#{caixaBean.salvarc()}" ajax="true" update="mensagens,botao_salvar,resultado,@form" onclick="jQuery(this).addClass('ui-state-disabled')"/>
+					&nbsp;
+					<p:commandButton id="botao_limpar" value="#{msg['btn.limpar']}" action="#{caixaBean.limparFormulario()}" ajax="true" update="mensagens,botao_limpar,resultado,@form" onclick="jQuery(this).addClass('ui-state-disabled')"/>
+					&nbsp;
+				    <p:commandButton id="botao_importar" value="#{msg['btn.importar']}" icon="ui-icon-plus" update="output" oncomplete="PF('dlgImport').show()" />
+					&nbsp;
+					<p:commandButton ajax="false" value="#{msg['btn.exportar']}" icon="ui-icon-circle-arrow-s" id="refresh"  >
+				        <p:fileDownload value="#{caixaBean.exportar()}" contentDisposition="attachment" />
+				    </p:commandButton> 					
+					&nbsp;
+					<p:commandButton id="botao_caixa" value="#{msg['btn.debito']}" icon="ui-icon-minus" action="#{caixaBean.caixa()}" ajax="false" onclick="jQuery(this).addClass('ui-state-disabled')"/>
+					&nbsp;
+				    <p:commandButton id="botao_dashboard" value="#{msg['btn.dashboard']}" icon="ui-icon-image" action="#{caixaBean.dashboard()}" ajax="true" immediate="true" onclick="jQuery(this).addClass('ui-state-disabled')"/>
+					&nbsp;
+					<p:commandButton id="botao_sair" value="#{msg['btn.sair']}"  action="#{loginBean.logout}" onclick="window.location.href='login.xhtml'" ajax="true" immediate="true" icon="ui-icon ui-icon-power"/>
+				</h:form>
+
+			</p:panel>
+		</center>
+	</div>
+	
+	
+	<div id="lista" class="conteudo">
+		
+			<p:outputPanel id="resultado">
+
+				<div>
+					<div>
+						<p:dataTable id="dtPendentes" value="#{caixaBean.listarC()}" var="obj" 
+							styleClass="table table-striped" resizeMode="expand" emptyMessage="#{msg['msg.semRegistros']}"				
+        					scrollable="true" scrollWidth="100%" scrollHeight="350"
+        					paginator="true" rows="10" 
+                 			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+                 			currentPageReportTemplate="Exibindo {startRecord}-{endRecord} de {totalRecords}"
+                 			lazy="true" paginatorAlwaysVisible="false" sortBy="#{obj.mes}">
+
+							<p:column headerText="#{msg['msg.cadastro.data']}" exportable="true" width="100">
+								<h:outputText id="outDt" value="#{obj.data}">
+									<f:convertDateTime pattern="dd/MM/yyyy"/>
+								</h:outputText>
+								<p:tooltip for="outDt" value="#{obj.data} #{obj.conta} R$#{obj.valor}" showEffect="clip" hideEffect="explode"/>
+							</p:column>
+							
+							<p:column headerText="#{msg['msg.cadastro.valor']}" exportable="true" width="100">
+								<h:outputText id="outValor" value="#{obj.valor}" style="float:right;">
+					                    <f:convertNumber type="currency" currencySymbol="#{msg['msg.moeda.simbolo']}" />
+								</h:outputText>	
+								
+							</p:column>
+							
+							<p:column headerText="#{msg['msg.cadastro.responsavel']}" exportable="true" width="100" >
+								<h:outputText id="outResponsavel" value="#{obj.responsavel}"/>	
+							</p:column>
+							
+							<p:column headerText="#{msg['msg.cadastro.descricao']}" exportable="true" width="150">
+								<h:outputText id="outDescricao" value="#{obj.descricao}"/>
+								<p:tooltip for="outDescricao" value="#{obj.descricao}" showEffect="clip" hideEffect="explode"/>
+							</p:column>
+							
+							<p:column headerText="#{msg['msg.acao']}" exportable="false" width="50" >
+							<center>
+								<p:commandLink id="btnEditar" action="#{caixaBean.editarLinha()}" ajax="true" update="panel-signup">
+									<h:graphicImage value="images/editicon.ico" title="#{msg['btn.editar']}" width="16" height="16"></h:graphicImage>
+									<f:setPropertyActionListener target="#{caixaBean.caixaSelecionado}" value="#{obj}" />
+								</p:commandLink>								
+								<p:tooltip for="btnEditar" value="#{msg['btn.editar']}"/>
+								&nbsp;
+								<p:commandLink id="btnExcluir" action="#{caixaBean.deletar()}" ajax="true" update="resultado">
+								<h:graphicImage value="images/trash.png" title="#{msg['btn.excluir']}" width="16" height="16"></h:graphicImage>
+									<f:setPropertyActionListener target="#{caixaBean.caixaSelecionado}" value="#{obj}" />
+								</p:commandLink>								
+								<p:tooltip for="btnExcluir" value="#{msg['btn.excluir']}"/>
+							</center>
+							</p:column>
+							
+					        <p:summaryRow listener="#{caixaBean.somarValores(obj.mes)}">
+					            <p:column colspan="2" style="text-align:right">
+					                <h:outputText value="#{msg['msg.sumario.total']}:" />
+					            </p:column>
+					            <p:column style="text-align:right">
+					                <h:outputText value="#{caixaBean.sumarioGrupo}">
+					                    <f:convertNumber type="currency" currencySymbol="#{msg['msg.moeda.simbolo']}" />
+					                </h:outputText>
+					            </p:column>
+					        </p:summaryRow>
+						</p:dataTable>
+						
+					    <p:panel id="horizontal" header="#{msg['msg.resumo']}" toggleable="true" collapsed="true" toggleTitle="Detalhes" toggleOrientation="vertical">
+					        <h:panelGrid columns="5" cellpadding="5">
+					        	<h:outputLabel value="#{msg['msg.sumario.total']}" />
+					        
+							    <h:outputText value="#{caixaBean.sumarioTotal}" style="font-size:18px;font-style:bold" >
+					                    <f:convertNumber type="currency" currencySymbol="#{msg['msg.moeda.simbolo']}" />
+								</h:outputText>
+
+					        </h:panelGrid>
+					    </p:panel>
+
+					</div>
+				</div>
+				
+			</p:outputPanel>
+			
+	</div>
+
+    <p:dialog header="#{msg['msg.importar.titulo']}" resizable="false" showEffect="fade" widgetVar="dlgImport">
+        <p:panelGrid id="output" columns="1">
+ 
+			<h:form enctype="multipart/form-data" method="post" style="width:260px">
+				<p:fileUpload value="#{fileUploadManagedBean.file}" mode="advanced" multiple="false" auto="true"
+				label="Escolher" fileUploadListener="#{caixaBean.doUpload}" update="@all" oncomplete="PF('dlgImport').hide();"></p:fileUpload>
+			</h:form>
+            
+        </p:panelGrid>
+    </p:dialog>
+
+
+</h:body>
+</html>

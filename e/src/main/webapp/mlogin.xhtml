@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pm="http://primefaces.org/mobile"	>
+<f:view renderKitId="PRIMEFACES_MOBILE" />
+
+<h:head>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	<f:facet name="first"><meta http-equiv="X-UA-Compatible" content="IE=9" /></f:facet>
+
+	<title>#{msg['msg.login.titulo']}</title>
+	<link rel="icon" type="image/ico" href="images/favicon.ico" />
+
+	<style type="text/css">
+		
+		.ui-panelgrid > * > tr, .ui-panelgrid > * > tr > td.ui-panelgrid-cell {
+	    	border: none;
+		}
+
+	</style>
+</h:head>
+
+<h:body>
+<pm:page id="login">
+
+	<pm:header title="#{msg['msg.login.titulo']}" swatch="b">
+	</pm:header>
+			
+	<pm:content>
+
+	<h:form id="loginFormId" prependId="false" >
+	<p:focus context="loginFormId"/>
+	
+<!-- 	<p:messages id="mensagem" autoUpdate="true" closable="true" /> -->
+	<p:growl id="mensagem"/>
+		<pm:field>
+			<p:outputLabel value="#{msg['msg.login.credencial']}" />
+			<p:inputText id="userName"  name="userName" value="#{loginBean.userName}"
+				required="true" requiredMessage="#{msg['msg.login.credencial.requerida']}" autocomplete="off"
+				label="#{msg['msg.login.credencial']}" />
+		</pm:field>
+		
+		<pm:field>
+			<p:outputLabel value="#{msg['msg.login.senha']}" />
+			<p:password id="senha" maxlength="20" name="senha" value="#{loginBean.senha}"
+				required="true" requiredMessage="#{msg['msg.login.senha.requerida']}" autocomplete="off" />
+		</pm:field>
+		
+		<pm:field>
+			<p:outputLabel value="#{msg['msg.linguagem']}:" />
+	         <h:selectOneMenu value="#{loginBean.localeTxt}" 
+	            valueChangeListener="#{loginBean.localeChanged}">
+	            <f:selectItems value="#{loginBean.countries}" /> 
+	         </h:selectOneMenu> 					
+		</pm:field>
+		
+		<br></br>
+		<p:commandButton value="#{msg['msg.login.acessar']}" action="#{loginBean.loginInternal}" ajax="false" update="@form"  >
+		</p:commandButton>
+
+	</h:form>
+	</pm:content>
+
+</pm:page>
+</h:body>
+</html>

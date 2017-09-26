@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROCESS model-entity="JSFProcess">
+ <PROCESS-ITEM NAME="rules:#login.xhtml" PATH="/login.xhtml"
+  SHAPE="32,16,50,73" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#login.xhtml:0" NAME="item"
+   PATH="/login.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="caixa::#caixa.xhtml" NAME="output"
+    PATH="/caixa.xhtml" TARGET="rules:#caixa.xhtml" TITLE="caixa" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="mcaixa::#mcaixa.xhtml" NAME="output1"
+    PATH="/mcaixa.xhtml" TARGET="rules:#mcaixa.xhtml" TITLE="mcaixa" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="erro::#erro.xhtml" NAME="output3"
+    PATH="/erro.xhtml" TARGET="rules:#erro.xhtml" TITLE="erro" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="mcx::#mcx.xhtml" NAME="output2"
+    PATH="/mcx.xhtml" TARGET="rules:#mcx.xhtml" TITLE="mcx" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#erro.xhtml" PATH="/erro.xhtml"
+  SHAPE="40,224,50,25" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#caixa.xhtml" PATH="/caixa.xhtml"
+  SHAPE="288,40,50,41" model-entity="JSFProcessGroup" persistent="true">
+  <PROCESS-ITEM ID="rules:#caixa.xhtml:0" NAME="item"
+   PATH="/caixa.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="dashboard::#dashboard.xhtml" NAME="output"
+    PATH="/dashboard.xhtml" TARGET="rules:#dashboard.xhtml"
+    TITLE="dashboard" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="recibo::#recibo.xhtml" NAME="output1"
+    PATH="/recibo.xhtml" TARGET="rules:#recibo.xhtml" TITLE="recibo" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#mcaixa.xhtml" PATH="/mcaixa.xhtml"
+  SHAPE="232,192,50,57" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#mcaixa.xhtml:0" NAME="item"
+   PATH="/mcaixa.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="mlistagem::#mlistagem.xhtml" NAME="output"
+    PATH="/mlistagem.xhtml" TARGET="rules:#mlistagem.xhtml"
+    TITLE="mlistagem" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="mdashboard::#mdashboard.xhtml"
+    NAME="output1" PATH="/mdashboard.xhtml"
+    TARGET="rules:#mdashboard.xhtml" TITLE="mdashboard" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#mlistagem.xhtml" PATH="/mlistagem.xhtml"
+  SHAPE="488,152,50,41" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#mlistagem.xhtml:0" NAME="item"
+   PATH="/mlistagem.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="mcaixa::#mcaixa.xhtml" NAME="output"
+    PATH="/mcaixa.xhtml" TARGET="rules:#mcaixa.xhtml" TITLE="mcaixa" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#dashboard.xhtml" PATH="/dashboard.xhtml"
+  SHAPE="576,64,50,41" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#dashboard.xhtml:0" NAME="item"
+   PATH="/dashboard.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="caixa::#caixa.xhtml" NAME="output"
+    PATH="/caixa.xhtml" TARGET="rules:#caixa.xhtml" TITLE="caixa" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#mdashboard.xhtml" PATH="/mdashboard.xhtml"
+  SHAPE="488,256,50,25" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#mdashboard.xhtml:0" NAME="item"
+   PATH="/mdashboard.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="mcaixa::#mcaixa.xhtml" NAME="output"
+    PATH="/mcaixa.xhtml" TARGET="rules:#mcaixa.xhtml" TITLE="mcaixa" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#mcx.xhtml" PATH="/mcx.xhtml"
+  SHAPE="235,348,0,0" model-entity="JSFProcessGroup" persistent="true"/>
+ <PROCESS-ITEM NAME="rules:#recibo.xhtml" PATH="/recibo.xhtml"
+  SHAPE="704,24,50,25" model-entity="JSFProcessGroup" persistent="true"/>
+</PROCESS>

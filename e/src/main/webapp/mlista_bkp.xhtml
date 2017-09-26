@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+	  xmlns:pm="http://primefaces.org/mobile"	>
+<f:view renderKitId="PRIMEFACES_MOBILE" />
+
+<h:head>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	<title>#{msg['msg.lembrete.titulo']}</title>
+	<link rel="icon" type="image/ico" href="images/todo.png" />
+
+</h:head>
+<h:body>
+<pm:page id="lancamento">
+
+	<pm:header>
+		<h1>
+		<p:outputLabel value="#{msg['msg.lembrete.titulo']}"></p:outputLabel>
+		</h1>
+	</pm:header>
+
+
+	<pm:content>
+		<h:form  id="lancamento" >
+		<p:messages id="mensagem" autoUpdate="true" closable="true" />
+<!-- 			<p:growl id="mensagem"/> -->
+
+			<p:panelGrid columns="2" rendered="true">			
+
+				<p:outputLabel for="lembrete" value="#{msg['msg.cadastro.lembrete']}" />
+				<p:autoComplete id="lembrete" value="#{lembreteBean.lembrete}" completeMethod="#{lembreteBean.completeLembrete}" maxlength="100" alt="#{msg['msg.cadastro.responsavel']}" autocomplete="off"></p:autoComplete>
+				
+				<p:outputLabel for="categoria" value="#{msg['msg.cadastro.categoria']}" />
+				<p:autoComplete id="categoria" value="#{lembreteBean.categoria}" completeMethod="#{lembreteBean.completeCategoria}" maxlength="20" autocomplete="off"></p:autoComplete>
+				
+				<p:commandButton id="botao_salvar" value="#{msg['btn.salvar']}" action="#{lembreteBean.salvar()}" ajax="true" update="@all" onclick="jQuery(this).addClass('ui-state-disabled')"/>
+
+				<p:commandButton id="botao_limpar"   value="#{msg['btn.limpar']}"   action="#{lembreteBean.limparFormulario()}"  ajax="true" update="@all" onclick="jQuery(this).addClass('ui-state-disabled')"/>
+
+			</p:panelGrid>
+
+		</h:form>
+		
+		<p:outputPanel id="resultado">
+		
+	    <p:tabView value="#{lembreteBean.listarTabs()}" var="categ">
+	        <p:tab title="#{categ.categoria}">
+	            <h:panelGrid columns="1" cellpadding="5">
+				<p:dataTable value="#{categ.categorias}" var="obj" 
+					styleClass="table table-striped" resizeMode="expand" emptyMessage="#{msg['msg.semRegistros']}"				
+		    					scrollable="true" scrollWidth="100%" scrollHeight="350"
+		    					paginator="true" rows="10" 
+		             			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+		             			currentPageReportTemplate="Exibindo {startRecord}-{endRecord} de {totalRecords}"
+		             			lazy="true" paginatorAlwaysVisible="false" sortBy="#{obj.mes}">
+					
+					<p:column headerText="#{msg['msg.cadastro.lembrete']}" exportable="true" width="150" >
+						<h:outputText value="#{obj.nome}" rendered="#{obj.concluido}" style="text-decoration:line-through"/>  
+						<h:outputText value="#{obj.nome}" rendered="#{!obj.concluido}"/>  					
+					</p:column>
+					
+					<p:column headerText="#{msg['msg.acao']}" exportable="false" width="50" >
+					<center>
+						<p:selectBooleanCheckbox value="#{obj.concluido}">
+							<p:ajax update="@all" listener="#{lembreteBean.concluirLinha(obj.id, !obj.concluido)}">
+							</p:ajax>
+						</p:selectBooleanCheckbox>
+						&nbsp;
+						<p:commandLink action="#{lembreteBean.editarLinha()}" ajax="true" update="@all">
+							<h:graphicImage value="images/editicon.ico" title="#{msg['btn.editar']}" width="16" height="16"></h:graphicImage>
+							<f:setPropertyActionListener target="#{lembreteBean.itemSelecionado}" value="#{obj}" />
+						</p:commandLink>								
+						&nbsp;
+						<p:commandLink action="#{lembreteBean.deletar()}" ajax="true" update="@all">
+						<h:graphicImage value="images/trash.png" title="#{msg['btn.excluir']}" width="16" height="16"></h:graphicImage>
+							<f:setPropertyActionListener target="#{lembreteBean.itemSelecionado}" value="#{obj}" />
+						</p:commandLink>								
+					</center>
+					</p:column>
+					
+				</p:dataTable>
+	 
+	            </h:panelGrid>
+	        </p:tab>
+	    </p:tabView>
+ 
+		</p:outputPanel>
+		
+	</pm:content>
+		
+</pm:page>
+</h:body>
+</html>

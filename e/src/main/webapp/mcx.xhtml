@@ -1,0 +1,257 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+	  xmlns:pm="http://primefaces.org/mobile"	>
+<f:view renderKitId="PRIMEFACES_MOBILE" />
+
+<h:head>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	<title>#{msg['msg.cadastro.titulo']}</title>
+	<link rel="icon" type="image/ico" href="images/favicon.ico" />
+<!-- 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/> -->
+
+	<!-- Graficos -->
+	<script src="scripts/highcharts.js"></script>
+	<script src="scripts/rendercharts.js"></script>
+	<script src="scripts/theme.js"></script>	
+
+</h:head>
+<h:body>
+
+<p:growl id="mensagem"  sticky="false" life="800" />
+
+<pm:page id="lancamento">
+
+	<pm:header title="#{msg['msg.cadastro.formulario']}" swatch="b">
+		<p:button outcome="pm:listagem?transition=flip" value="#{msg['btn.listar']}" icon="ui-icon-bullets" styleClass="ui-btn-left ui-btn-inline" />
+		<p:button outcome="pm:dashboard?transition=flip" value="#{msg['btn.dashboard']}" icon="ui-icon-star" styleClass="ui-btn-rigth ui-btn-inline"></p:button>
+	</pm:header>
+
+
+	<pm:content>
+		<h:form  id="lancamento" >
+<!-- 		<p:messages id="mensagem" autoUpdate="true" closable="true" /> -->
+
+			<p:panelGrid columns="2" rendered="true">			
+				<p:outputLabel for="data" value="#{msg['msg.cadastro.data']}" />
+				<p:calendar id="data" value="#{caixaBean.data}" pattern="dd/MM/yyyy" mask="true" locale="pt_BR" autocomplete="off"/>
+
+				<p:outputLabel for="tipoConta" value="#{msg['msg.cadastro.conta']}" />
+			    <p:autoComplete alt="#{msg['msg.cadastro.conta']}"
+			       id="tipoConta" value="#{caixaBean.contaSelecionada}" 
+			       converter="contaAutoCompleteConverter"
+			       completeMethod="#{autoComplete.completeConta}"
+			       var="tpConta" itemLabel="#{tpConta.conta}" itemValue="#{tpConta}"
+			       forceSelection="true" dropdown="true"
+			       required="false" maxResults="3" autocomplete="off"  >
+			    </p:autoComplete>
+
+				<p:outputLabel for="valor" value="#{msg['msg.cadastro.valor']}" />
+				<pe:inputNumber id="valor" value="#{caixaBean.valor}" maxlength="13" decimalPlaces="2" decimalSeparator="," thousandSeparator="." alt="#{msg['msg.cadastro.valor']}" autocomplete="off" ></pe:inputNumber>
+
+				<p:outputLabel for="formaPgto" value="#{msg['msg.cadastro.formaPgto']}" />
+			    <p:autoComplete alt="#{msg['msg.cadastro.formaPgto']}"
+			       id="formaPgto" value="#{caixaBean.formaPgtoSelecionado}" 
+			       converter="formaPgtoAutoCompleteConverter"
+			       completeMethod="#{autoComplete.completeFormaPgto}"
+			       var="tpPgto" itemLabel="#{tpPgto.formaPgto}" itemValue="#{tpPgto}"
+			       forceSelection="true" dropdown="true"
+			       required="false" maxResults="3" autocomplete="off">
+			    </p:autoComplete>
+				
+				<p:outputLabel for="responsavel" value="#{msg['msg.cadastro.responsavel']}" />
+				<p:autoComplete id="responsavel" value="#{caixaBean.responsavel}" completeMethod="#{autoComplete.completeResponsavel}" maxlength="20" alt="#{msg['msg.cadastro.responsavel']}" autocomplete="off"></p:autoComplete>
+							
+				<p:outputLabel for="descricao" value="#{msg['msg.cadastro.descricao']}" />
+				<p:inputText id="descricao" value="#{caixaBean.descricao}" maxlength="100" alt="#{msg['msg.cadastro.descricao']}" autocomplete="off"></p:inputText>
+
+
+			</p:panelGrid>
+
+			<p:toolbar>
+			    <f:facet name="left">
+					<p:commandButton id="botao_salvar" value="#{msg['btn.salvar']}" icon="ui-icon-arrow-r" action="#{caixaBean.salvar()}" ajax="true" update="mensagem,botao_salvar,@form,listagem:dtPendentes" onclick="jQuery(this).addClass('ui-state-disabled')"/>
+			    </f:facet>
+			 
+			    <f:facet name="right">
+			    	<p:commandButton id="botao_sair"   value="#{msg['btn.sair']}" icon="ui-icon-power" action="#{loginBean.logout}" immediate="true" onclick="window.location.href='login.xhtml'" ajax="true"/>
+			    </f:facet>
+			</p:toolbar>
+
+		</h:form>
+	</pm:content>		
+</pm:page>
+
+
+<pm:page id="listagem">
+	<pm:header title="#{msg['msg.listagem.titulo']}" swatch="b">
+		<p:button outcome="pm:lancamento?transition=flip" value="#{msg['btn.voltar']}" icon="ui-icon-arrow-l" styleClass="ui-btn-left ui-btn-inline"  />
+	</pm:header>
+
+	<pm:content>
+<!-- 		<p:messages id="mensagem" autoUpdate="true" closable="true" showSummary="true" /> -->
+<!-- 		<p:growl id="mensagem"  sticky="false" life="800" /> -->
+		
+		<p:dataTable id="dtPendentes" value="#{caixaBean.listarD()}" var="obj" 
+			styleClass="table table-striped" resizeMode="expand" emptyMessage="#{msg['msg.semRegistros']}"				
+    					scrollable="true" 
+    					paginator="true" rows="8" 
+             			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+             			currentPageReportTemplate="Exibindo {startRecord}-{endRecord} de {totalRecords}"
+             			lazy="true" paginatorAlwaysVisible="false" sortBy="#{obj.mes}">
+
+			<p:column headerText="#{msg['msg.cadastro.data']}" width="20%">
+				<!-- PF('dlgOBS').show() -->
+				<p:commandLink id="btnEdit" action="#{caixaBean.modalOBS()}" ajax="true" update="listagem:dlgOBS">
+				<h:graphicImage value="images/edit.png" title="#{msg['btn.editar']}" width="16" height="16"></h:graphicImage>
+					<f:setPropertyActionListener target="#{caixaBean.caixaSelecionado}" value="#{obj}" />
+				</p:commandLink>																
+				&nbsp;
+				<h:outputText id="outDt" value="#{obj.data}">
+					<f:convertDateTime pattern="dd/MM"/>
+				</h:outputText>
+			</p:column>
+			
+			<p:column headerText="#{msg['msg.cadastro.conta']}" width="40%">
+				<h:outputText id="outCont" value="#{obj.conta}"/>	
+			</p:column>
+			
+			<p:column headerText="#{msg['msg.cadastro.valor']}"  width="40%">
+				<h:outputText id="outValor" value="#{obj.valor}" style="float:right;">
+	                    <f:convertNumber type="currency" />
+						<!--currencySymbol="#{msg['msg.moeda.simbolo']}" -->
+				</h:outputText>
+			</p:column>
+
+<!-- 			<p:column headerText="#{msg['msg.acao']}" exportable="false" width="50" > -->
+<!-- 			<center> -->
+<!-- 				<p:commandLink id="btnExcluir" action="#{caixaBean.deletar()}" update="listagem:dtPendentes,mensagem"> -->
+<!-- 				<h:graphicImage value="images/trash.png" title="#{msg['btn.excluir']}" width="16" height="16"></h:graphicImage> -->
+<!-- 					<f:setPropertyActionListener target="#{caixaBean.caixaSelecionado}" value="#{obj}" /> -->
+<!-- 				</p:commandLink>								 -->
+<!-- 			</center> -->
+<!-- 			</p:column> -->
+			
+		</p:dataTable>
+		
+		<p:toolbar>
+		    <f:facet name="right">
+			<h:form enctype="multipart/form-data" method="post">
+		    	<p:commandButton id="botao_sair"   value="#{msg['btn.sair']}" icon="ui-icon-power" action="#{loginBean.logout}" immediate="true" onclick="window.location.href='login.xhtml'" ajax="true"/>
+	    	</h:form>
+		    </f:facet>
+		</p:toolbar>		
+		
+	    <p:dialog header="#{msg['msg.cadastro.formulario']}" resizable="false" showEffect="fade" id="dlgOBS" widgetVar="dlgOBS" >
+	        <p:panelGrid id="output" columns="1">
+	 
+				<h:form id="formModal">
+					<div style="padding: 20px;">
+					
+						<p:outputLabel for="data2" value="#{msg['msg.cadastro.data']}" />
+						<p:calendar id="data2" value="#{caixaBean.data}" pattern="dd/MM/yyyy" mask="true" locale="pt_BR" autocomplete="off"/>
+		
+						<p:outputLabel for="tipoConta2" value="#{msg['msg.cadastro.conta']}" />
+					    <p:autoComplete alt="#{msg['msg.cadastro.conta']}"
+					       id="tipoConta2" value="#{caixaBean.contaSelecionada}" 
+					       converter="contaAutoCompleteConverter"
+					       completeMethod="#{autoComplete.completeConta}"
+					       var="tpConta" itemLabel="#{tpConta.conta}" itemValue="#{tpConta}"
+					       forceSelection="true" dropdown="true"
+					       required="false" maxResults="3" autocomplete="off"  >
+					    </p:autoComplete>
+		
+						<p:outputLabel for="valor2" value="#{msg['msg.cadastro.valor']}" />
+						<pe:inputNumber id="valor2" value="#{caixaBean.valor}" maxlength="13" decimalPlaces="2" decimalSeparator="," thousandSeparator="." alt="#{msg['msg.cadastro.valor']}" autocomplete="off" ></pe:inputNumber>
+		
+						<p:outputLabel for="formaPgto2" value="#{msg['msg.cadastro.formaPgto']}" />
+					    <p:autoComplete alt="#{msg['msg.cadastro.formaPgto']}"
+					       id="formaPgto2" value="#{caixaBean.formaPgtoSelecionado}" 
+					       converter="formaPgtoAutoCompleteConverter"
+					       completeMethod="#{autoComplete.completeFormaPgto}"
+					       var="tpPgto" itemLabel="#{tpPgto.formaPgto}" itemValue="#{tpPgto}"
+					       forceSelection="true" dropdown="true"
+					       required="false" maxResults="3" autocomplete="off">
+					    </p:autoComplete>
+						
+						<p:outputLabel value="#{msg['msg.cadastro.responsavel']}" for="Resp"/>
+						<p:autoComplete id="Resp" value="#{caixaBean.responsavel}" completeMethod="#{autoComplete.completeResponsavel}" maxlength="20" alt="#{msg['msg.cadastro.responsavel']}" autocomplete="off"></p:autoComplete>
+
+						<p:outputLabel value="#{msg['msg.cadastro.descricao']}" for="OBS"/>
+						<p:inputText id="OBS" value="#{caixaBean.descricao}"/>
+				
+						<p:commandButton styleClass="btn btn-primary"  value="Salvar" action="#{caixaBean.salvar()}" oncomplete="PF('dlgOBS').hide();" update="listagem:dtPendentes,mensagem" />
+						<p:commandButton  styleClass="btn" onclick="PF('dlgOBS').hide()" action="#{caixaBean.limparFormulario()}" value="Fechar" />  
+					</div>
+				</h:form>
+	        </p:panelGrid>
+	    </p:dialog>
+		
+		
+		
+	</pm:content>
+</pm:page>
+
+
+<pm:page id="dashboard">
+
+	<pm:header title="#{msg['msg.dashboard.titulo']}" swatch="b">
+		<p:button outcome="pm:lancamento?transition=flip" value="#{msg['btn.voltar']}" icon="ui-icon-arrow-l" styleClass="ui-btn-left ui-btn-inline"  />
+	</pm:header>
+
+	<pm:content>
+<!-- 		<p:growl id="mensagem"  sticky="false" life="800" /> -->
+
+		<div class="formulario correcao-row pendencias">
+			<h:form>
+
+			<p:outputPanel id="resultado">	
+				<div id="containerPizzaMovimentacaoPorCategoria" class="grafico"></div>
+				<div id="containerBarraTotalPorConta" class="grafico"></div>
+				<div id="containerLinhaPgtoContaMesAtualAnterior" class="grafico"></div>
+
+				<div id="containerColunaTotalPorConta" class="grafico"></div>
+				<div id="containerPizzaPercentualPorConta" class="grafico"></div>
+				<div id="containerMovimentacaoDiariaMesAtualAnterior" class="grafico"></div>
+
+				<div id="containerConcluidosPendentes" class="grafico"></div>
+				<div id="containerNotasProblemaArea" class="grafico"></div>
+				<div id="containerDistribuicaoAnomalias" class="grafico"></div>
+				<div id="containerPendenteDentroForaPrazo" class="grafico"></div>
+				<div id="containerConcluidoDentroForaPrazo" class="grafico"></div>
+				<div id="containerNriCriadaExcluida" class="grafico"></div>
+			</p:outputPanel>
+
+			<p:toolbar>
+			    <f:facet name="left">
+					<p:commandButton styleClass="btn btn-primary" value="#{msg['btn.filtrar']}" ajax="true" update="resultado" 
+						action="#{dashboardBean.filtrarMobile()}" oncomplete="renderChart(args)" icon="ui-icon-search" >
+					 </p:commandButton>
+			    </f:facet>
+			 
+			    <f:facet name="right">
+			    	<p:commandButton id="botao_sair"   value="#{msg['btn.sair']}" icon="ui-icon-power" action="#{loginBean.logout}" immediate="true" onclick="window.location.href='login.xhtml'" ajax="true"/>
+			    </f:facet>
+			</p:toolbar>
+
+
+		</h:form>
+
+		</div>
+		
+		
+	<div class="limpador"></div>
+		
+	</pm:content>
+
+</pm:page>
+
+
+</h:body>
+</html>

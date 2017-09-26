@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+	
+<h:head>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	<title>#{msg['msg.dashboard.titulo']}</title>
+	<link rel="icon" type="image/ico" href="images/favicon.ico" />
+
+	<!-- Graficos -->
+	<script src="scripts/highcharts.js"></script>
+	<script src="scripts/rendercharts.js"></script>
+	<script src="scripts/theme.js"></script>	
+
+	<style type="text/css">
+		.ui-panelgrid > * > tr, .ui-panelgrid > * > tr > td.ui-panelgrid-cell {
+	    	border: none;
+		}
+	</style>
+</h:head>
+<h:body>
+
+<div id="divPanel" class="container" >
+	<center>
+	<p:panel id="panel-signup" header="#{msg['msg.dashboard.titulo']}" resizable="false">
+
+		<div class="conteudo">
+		
+			<fieldset>
+				<legend>#{msg['msg.opcoes']}</legend>
+				
+				<div class="formulario correcao-row pendencias">
+					<h:form>
+					<p:poll autoStart="true" listener="#{dashboardBean.filtroInicial}" oncomplete="renderChart(args)" interval="1" stop="#{dashboardBean.filtroInicialCarregado}"/>
+					
+					<p:outputPanel id="filtros">
+
+						<span class="span3 datepicker"> #{msg['msg.periodo']}  
+							<p:calendar value="#{dashboardBean.filtro.dataInicio}" pattern="dd/MM/yyyy" showButtonPanel="false" mask="true"/>
+							<p:calendar value="#{dashboardBean.filtro.dataFim}" pattern="dd/MM/yyyy" showButtonPanel="false" mask="true"/>
+						</span>
+						<p></p>
+						<span class="span3"> 
+							<h:outputLabel for="contacb" style="margin-top: 6px;">#{msg['msg.cadastro.conta']}</h:outputLabel>
+							 <p:selectCheckboxMenu id="contacb" filter="false"
+									value="#{dashboardBean.filtro.contas}"
+									label="Selecione" converter="contaConverter" >
+									<f:selectItems value="#{dashboardBean.listaContas}"
+										var="ct" itemLabel="#{ct.conta}"
+										itemValue="#{ct}" />
+								</p:selectCheckboxMenu>
+						</span>
+						
+						<span class="span3"> 
+							<h:outputLabel for="formacb" style="margin-top: 6px;">#{msg['msg.cadastro.formaPgto']}</h:outputLabel>
+							 <p:selectCheckboxMenu id="formacb"
+									value="#{dashboardBean.filtro.formaPgtos}"
+									label="Selecione" converter="formaPgtoConverter" >
+									<f:selectItems value="#{dashboardBean.listaFormaPgtos}"
+										var="pgto" itemLabel="#{pgto.formaPgto}"
+										itemValue="#{pgto}" />
+								</p:selectCheckboxMenu>
+						</span>							
+						
+						<span class="span3"> 
+							<h:outputLabel for="usercb" style="margin-top: 6px;">#{msg['msg.cadastro.responsavel']}</h:outputLabel>
+							 <p:selectCheckboxMenu id="usercb"
+									value="#{dashboardBean.filtro.responsaveis}"
+									label="Selecione">
+									<f:selectItems value="#{dashboardBean.listaResponsaveis}"
+										var="user" itemLabel="#{user}"
+										itemValue="#{user}" />
+								</p:selectCheckboxMenu>
+						</span>
+						
+						<span class="span3"> 
+							<h:outputLabel for="categoriacb" style="margin-top: 6px;">#{msg['msg.categoria']}</h:outputLabel>
+							<p:selectCheckboxMenu
+								id="categoriacb"	value="#{dashboardBean.filtro.categorias}"
+								label="Selecione">
+								<f:selectItems
+									value="#{dashboardBean.listaCategorias}"
+									var="categoria" itemLabel="#{categoria}"
+									itemValue="#{categoria}" />
+							</p:selectCheckboxMenu>
+	
+						</span>
+																				
+					</p:outputPanel>
+					
+					<br></br>
+					
+					<p:commandButton styleClass="btn btn-primary" value="#{msg['btn.filtrar']}" ajax="true" update="resultado" 
+						action="#{dashboardBean.filtrar()}" oncomplete="renderChart(args)" >
+					 </p:commandButton>
+					<p:commandButton id="botao_voltar" value="#{msg['btn.voltar']}" action="#{dashboardBean.caixa()}" ajax="false" onclick="jQuery(this).addClass('ui-state-disabled')"/>
+					<p:commandButton id="botao_sair" value="#{msg['btn.sair']}"  action="#{loginBean.logout}" onclick="window.location.href='login.xhtml'" ajax="true" immediate="true" icon="ui-icon ui-icon-power"/>
+					</h:form>
+				</div>
+				
+				
+			</fieldset>
+		
+			<p:outputPanel id="resultado">	
+				<div id="containerColunaTotalPorConta" class="grafico"></div>
+				<div id="containerBarraTotalPorConta" class="grafico"></div>
+				<div id="containerPizzaPercentualPorConta" class="grafico"></div>
+				<div id="containerMovimentacaoDiariaMesAtualAnterior" class="grafico"></div>
+				<div id="containerLinhaPgtoContaMesAtualAnterior" class="grafico"></div>
+				<div id="containerPizzaMovimentacaoPorCategoria" class="grafico"></div>
+
+				<div id="containerConcluidosPendentes" class="grafico"></div>
+				<div id="containerNotasProblemaArea" class="grafico"></div>
+				<div id="containerDistribuicaoAnomalias" class="grafico"></div>
+				<div id="containerPendenteDentroForaPrazo" class="grafico"></div>
+				<div id="containerConcluidoDentroForaPrazo" class="grafico"></div>
+				<div id="containerNriCriadaExcluida" class="grafico"></div>
+			</p:outputPanel>
+			
+			<div class="limpador"></div>
+			
+		</div>	
+	
+	</p:panel>
+	</center>
+</div>
+	
+</h:body>
+</html>

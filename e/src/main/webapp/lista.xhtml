@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:head>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	<title>#{msg['msg.lembrete.titulo']}</title>
+	<link rel="icon" type="image/ico" href="images/todo.png" />
+
+	<style type="text/css">
+		.ui-panelgrid > * > tr, .ui-panelgrid > * > tr > td.ui-panelgrid-cell {
+	    	border: none;
+		}
+	</style>
+</h:head>
+<h:body>
+
+	<div id="divPanel" class="container" >
+		<center>
+			<p:panel id="panel-signup" header="#{msg['msg.lembrete.titulo']}" resizable="false">
+				<h:form  id="lancamento" >
+					<p:messages id="mensagens" autoUpdate="true" closable="true" />
+					<p:panelGrid columns="6" cellpadding="2">
+					
+						<p:outputLabel for="data" value="#{msg['msg.cadastro.data']}" />
+						<p:calendar id="data" value="#{lembreteBean.data}" pattern="dd/MM/yyyy" mask="true" locale="pt_BR" showButtonPanel="false" style="width: 93px;" effect="slide" alt="#{msg['msg.cadastro.data']}" />
+
+						<p:outputLabel for="lembrete" value="#{msg['msg.cadastro.lembrete']}" />
+						<p:autoComplete id="lembrete" value="#{lembreteBean.lembrete}" completeMethod="#{lembreteBean.completeLembrete}" maxlength="100" alt="#{msg['msg.cadastro.responsavel']}"></p:autoComplete>
+
+						<p:outputLabel for="categoria" value="#{msg['msg.cadastro.categoria']}" />
+						<p:autoComplete id="categoria" value="#{lembreteBean.categoria}" completeMethod="#{lembreteBean.completeCategoria}" maxlength="20" autocomplete="off"></p:autoComplete>
+									
+					</p:panelGrid>
+					<br></br>
+					<p:commandButton id="botao_salvar" value="#{msg['btn.salvar']}" action="#{lembreteBean.salvar()}" ajax="true" update="mensagens,botao_salvar,resultado,@form" onclick="jQuery(this).addClass('ui-state-disabled')"/>
+					&nbsp;
+					<p:commandButton id="botao_limpar" value="#{msg['btn.limpar']}" action="#{lembreteBean.limparFormulario()}" ajax="true" update="mensagens,botao_limpar,resultado,@form" onclick="jQuery(this).addClass('ui-state-disabled')"/>
+				</h:form>
+
+			</p:panel>
+		</center>
+	</div>
+	
+	
+	<div id="lista" class="conteudo">
+		
+			<p:outputPanel id="resultado">
+
+				<div>
+					<div>
+						<p:dataTable id="dtPendentes" value="#{lembreteBean.listar()}" var="obj" 
+							styleClass="table table-striped" resizeMode="expand" emptyMessage="#{msg['msg.semRegistros']}"				
+        					scrollable="true" scrollWidth="100%" scrollHeight="350"
+        					paginator="true" rows="10" 
+                 			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+                 			currentPageReportTemplate="Exibindo {startRecord}-{endRecord} de {totalRecords}"
+                 			lazy="true" paginatorAlwaysVisible="false" sortBy="#{obj.mes}">
+
+							<p:column headerText="#{msg['msg.cadastro.data']}" exportable="true" width="50">
+								<h:outputText value="#{obj.data}" rendered="#{obj.concluido}" style="text-decoration:line-through">
+									<f:convertDateTime pattern="dd/MM/yyyy"/>
+								</h:outputText>
+				
+								<h:outputText value="#{obj.data}" rendered="#{!obj.concluido}">
+									<f:convertDateTime pattern="dd/MM/yyyy"/>
+								</h:outputText>
+							</p:column>
+							
+							<p:column headerText="#{msg['msg.cadastro.lembrete']}" exportable="true" width="150" >
+								<h:outputText value="#{obj.nome}" rendered="#{obj.concluido}" style="text-decoration:line-through"/>  
+								<h:outputText value="#{obj.nome}" rendered="#{!obj.concluido}"/>  					
+							</p:column>
+							
+							<p:column headerText="#{msg['msg.cadastro.categoria']}" exportable="true" width="150" >
+								<h:outputText value="#{obj.categoria}" rendered="#{obj.concluido}" style="text-decoration:line-through"/>  
+								<h:outputText value="#{obj.categoria}" rendered="#{!obj.concluido}"/>  					
+							</p:column>
+							
+							<p:column headerText="#{msg['msg.acao']}" exportable="false" width="50" >
+							<center>
+								<p:selectBooleanCheckbox id="btnConcluido" value="#{obj.concluido}" >
+            						<p:ajax update="resultado" listener="#{lembreteBean.concluirLinha(obj.id, !obj.concluido)}">
+            						</p:ajax>
+								</p:selectBooleanCheckbox>
+								<p:tooltip for="btnConcluido" value="Concluir"/>
+								&nbsp;
+								<p:commandLink id="btnEditar" action="#{lembreteBean.editarLinha()}" ajax="true" update="panel-signup">
+									<h:graphicImage value="images/editicon.ico" title="#{msg['btn.editar']}" width="16" height="16"></h:graphicImage>
+									<f:setPropertyActionListener target="#{lembreteBean.itemSelecionado}" value="#{obj}" />
+								</p:commandLink>								
+								<p:tooltip for="btnEditar" value="#{msg['btn.editar']}"/>
+								&nbsp;
+								<p:commandLink id="btnExcluir" action="#{lembreteBean.deletar()}" ajax="true" update="resultado">
+								<h:graphicImage value="images/trash.png" title="#{msg['btn.excluir']}" width="16" height="16"></h:graphicImage>
+									<f:setPropertyActionListener target="#{lembreteBean.itemSelecionado}" value="#{obj}" />
+								</p:commandLink>								
+								<p:tooltip for="btnExcluir" value="#{msg['btn.excluir']}"/>
+							</center>
+							</p:column>
+							
+						</p:dataTable>
+						
+					</div>
+				</div>
+				
+			</p:outputPanel>
+			
+	</div>
+
+</h:body>
+</html>

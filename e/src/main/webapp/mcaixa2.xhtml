@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+      
+
+<h:head>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	<title>#{msg['msg.cadastro.titulo']}</title>
+	<link rel="icon" type="image/ico" href="images/favicon.png" />
+
+	<style type="text/css">
+   .zoom {
+        -ms-transform: scale(1.2);
+        -ms-transform-origin: 50% 0; /* IE */
+        -moz-transform: scale(1.2);
+        -moz-transform-origin: 50% 0 0;  /* Mozilla */ 
+        -webkit-transform: scale(1.2);
+        -webkit-transform-origin: 50% 0 0;  /* Chrome, Safari, Opera */
+     }
+	</style>
+</h:head>
+<h:body>
+
+	<div id="divPanel" class="container" >
+		<center>
+			<p:panel id="panel-signup" header="#{msg['msg.cadastro.formulario']}" resizable="false">
+				<h:form  id="lancamento" >
+					<p:messages id="mensagens" autoUpdate="true" closable="true" />
+					<p:panelGrid columns="2" cellpadding="2">
+					
+						<p:outputLabel for="data" value="#{msg['msg.cadastro.data']}" />
+						<p:calendar id="data" value="#{caixaBean.data}" pattern="dd/MM/yyyy" mask="true" locale="pt_BR" showButtonPanel="false" style="width: 93px;" effect="slide"/>
+
+						<p:outputLabel for="tipoConta" value="#{msg['msg.cadastro.conta']}" />
+						<p:selectOneMenu id="tipoConta"
+							value="#{caixaBean.idConta}"
+							label="Selecione" filter="false"
+							panelStyle="width:250px" >
+							<f:selectItem itemLabel="#{msg['msg.conta.invalido']}" itemValue="-1" />
+							<f:selectItems 	value="#{caixaBean.listaTipoConta}"
+											var="tipo" itemLabel="#{tipo.conta}"
+											itemValue="#{tipo.idConta}" noSelectionOption="true"/>
+						</p:selectOneMenu>
+
+
+						<p:outputLabel for="formaPgto" value="#{msg['msg.cadastro.formaPgto']}" />
+						<p:selectOneMenu id="formaPgto"
+							value="#{caixaBean.idFormaPgto}"
+							label="Selecione" filter="false"
+							panelStyle="width:250px" >
+							<f:selectItem itemLabel="#{msg['msg.formaPgto.invalido']}" itemValue="-1" />
+							<f:selectItems 	value="#{caixaBean.listaFormaPgto}"
+											var="tipo" itemLabel="#{tipo.formaPgto}"
+											itemValue="#{tipo.idFormaPgto}" noSelectionOption="true"/>
+						</p:selectOneMenu>
+						
+						
+						<p:outputLabel for="valor" value="#{msg['msg.cadastro.valor']}" />
+						<p:inputText id="valor" value="#{caixaBean.valor}" maxlength="13">
+							<pe:keyFilter regEx="/[0-9V,.]/i"/>
+						</p:inputText>
+
+									
+						<p:outputLabel for="responsavel" value="#{msg['msg.cadastro.responsavel']}" />
+						<p:inputText id="responsavel" value="#{caixaBean.responsavel}" maxlength="20"></p:inputText>
+
+									
+						<p:outputLabel for="descricao" value="#{msg['msg.cadastro.descricao']}" />
+						<p:inputText id="descricao" value="#{caixaBean.descricao}" maxlength="100"></p:inputText>
+
+
+					</p:panelGrid>
+					<br></br>
+					<p:commandButton id="botao_salvar" value="#{msg['btn.salvar']}" action="#{caixaBean.salvar()}" ajax="true" update="mensagens,botao_salvar,@form" onclick="jQuery(this).addClass('ui-state-disabled')"/>
+					&nbsp;
+					<p:commandButton id="botao_limpar" value="#{msg['btn.limpar']}" action="#{caixaBean.limparFormulario()}" ajax="true" update="mensagens,botao_limpar,@form" onclick="jQuery(this).addClass('ui-state-disabled')"/>
+					&nbsp;
+					<p:commandButton id="botao_listar" value="#{msg['btn.listar']}" action="#{caixaBean.moblistagem()}" ajax="false" onclick="jQuery(this).addClass('ui-state-disabled')"/>
+					&nbsp;
+ 					<p:commandButton  id="botao_sair"  value="#{msg['btn.voltar']}"  immediate="true" onclick="window.location.href='login.xhtml'" ajax="true"/>
+ 					
+				</h:form>
+
+			</p:panel>
+		</center>
+	</div>
+	
+	</h:body>
+
+</html>
